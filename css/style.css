@@ -1,4 +1,4 @@
-/* Lab7616 — shared site design */
+/* Lab7616 — shared site design | Version 1.1 */
 :root {
   color-scheme: dark;
   --night: #060c1c;
@@ -25,15 +25,30 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .skip-link { position: absolute; top: 10px; left: 12px; z-index: 10; padding: 10px 16px; background: var(--night); transform: translateY(-180%); }
 .skip-link:focus { transform: none; }
 /* The background file is supplied separately by the site owner. */
-.home-page { isolation: isolate; background: #060c1c; }
+/* Keep the square animation intact; extend the surrounding space with CSS. */
+.home-page {
+  isolation: isolate;
+  background: radial-gradient(ellipse at 50% 47%, #111b37 0%, #080e20 48%, #040817 100%);
+  --animation-size: min(100vw, 82vh, 760px);
+  --animation-size: min(100vw, 82svh, 760px);
+}
 .home-page::before, .home-page::after {
-  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  content: ""; position: fixed; z-index: -1; pointer-events: none;
 }
 .home-page::before {
-  background: url("../images/string-theory.gif") center center / cover no-repeat;
+  width: var(--animation-size); height: var(--animation-size);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: url("../images/string-theory.gif") center / contain no-repeat;
+  /* Feather only the outer edges, without stretching or cropping the GIF. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+  mask-composite: intersect;
 }
 .home-page::after {
-  background: linear-gradient(180deg, rgba(2,6,18,.53), rgba(2,6,18,.36) 42%, rgba(2,6,18,.68)), radial-gradient(ellipse at center, rgba(2,6,18,.40), transparent 76%);
+  inset: 0;
+  /* Local contrast behind the headline; the rest of the GIF stays brighter. */
+  background: radial-gradient(ellipse min(560px, 85vw) 190px at 50% 50%, rgba(2,6,18,.50), rgba(2,6,18,.18) 65%, transparent 100%);
 }
 .home-page.animation-hidden::before { background-image: none; }
 .site-header {
@@ -46,11 +61,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .site-header nav a { font-size: .96rem; font-weight: 500; white-space: nowrap; color: var(--muted); }
 .site-header nav a:hover, .site-header nav a[aria-current="page"] { color: white; text-decoration: underline; text-underline-offset: 7px; }
 .hero { flex: 1; position: relative; display: grid; place-items: center; text-align: center; padding: clamp(65px, 11vh, 130px) 20px; }
-.hero-copy { width: min(100%, 1100px); }
-.eyebrow { margin: 0 0 22px; text-transform: uppercase; font-size: .77rem; letter-spacing: .18em; color: var(--muted); }
-.hero h1 { margin: 0; font: 400 clamp(30px, 4.9vw, 68px)/1.25 Georgia, "Times New Roman", serif; letter-spacing: -.025em; text-wrap: balance; text-shadow: 0 2px 12px #020612, 0 1px 3px #020612; }
-.subtitle { margin: 30px 0 0; color: #e1edff; font: 400 clamp(19px, 2.5vw, 27px)/1.4 Georgia, serif; text-shadow: 0 2px 8px #020612; }
-.subtitle::before { content: ""; display: block; width: 64px; height: 1px; background: var(--accent); margin: 0 auto 23px; }
+.hero-copy { width: min(100%, 1020px); }
+.eyebrow { margin: 0 0 24px; text-transform: uppercase; font-size: .77rem; letter-spacing: .18em; color: var(--muted); }
+.hero h1 { margin: 0; font: 400 clamp(28px, 4.1vw, 58px)/1.27 Georgia, "Times New Roman", serif; letter-spacing: -.025em; text-wrap: balance; text-shadow: 0 2px 12px #020612, 0 1px 3px #020612; }
+.subtitle { margin: 26px 0 0; color: #e1edff; font: 400 clamp(18px, 2.2vw, 25px)/1.4 Georgia, serif; text-shadow: 0 2px 8px #020612; }
+.subtitle::before { content: ""; display: block; width: 64px; height: 1px; background: var(--accent); margin: 0 auto 20px; }
 .animation-toggle { position: absolute; bottom: 12px; right: clamp(20px, 5vw, 80px); border: 1px solid #7184a1; border-radius: 4px; background: #080f20; color: var(--muted); padding: 4px 10px; font-size: .75rem; cursor: pointer; }
 .animation-toggle[hidden] { display: none; }
 .site-footer { padding: 18px 20px; text-align: center; font-size: .77rem; letter-spacing: .06em; color: var(--muted); background: rgba(3,8,22,.66); border-top: 1px solid rgba(190,215,245,.14); }
@@ -61,6 +76,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   .site-header { align-items: flex-start; flex-direction: column; gap: 16px; padding: 18px 20px; }
   .site-header nav { justify-content: flex-start; gap: 10px 20px; }
   .site-header nav a { font-size: .88rem; }
+  .home-page { --animation-size: min(100vw, 70vh, 560px); --animation-size: min(100vw, 70svh, 560px); }
+  .home-page::after { background: radial-gradient(ellipse 95vw 180px at 50% 50%, rgba(2,6,18,.53), transparent 100%); }
+  .hero { padding: 60px 20px 74px; }
+  .hero h1 { font-size: clamp(28px, 5.8vw, 42px); }
   .desktop-break { display: none; }
   .eyebrow { letter-spacing: .12em; font-size: .7rem; }
 }
